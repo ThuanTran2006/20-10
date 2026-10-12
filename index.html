@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiệm Hoa Quanh Năm - Chúc Mừng 20/10 🌸</title>
+    <title>Tiệm Hoa Chỉ Mở Một Lần Trong Năm - Chúc Mừng 20/10 🌸</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #fff0f3; /* Tông nền hồng pastel nhẹ nhàng */
+            background-color: #fff0f3;
             color: #4a3b4c;
             min-height: 100vh;
             overflow-x: hidden;
@@ -24,7 +24,7 @@
             justify-content: center;
         }
 
-        /* Ambient Light Background Effect (Tông hồng - trắng ấm áp) */
+        /* Ambient Light Background Effect */
         .ambient-bg {
             position: fixed;
             top: 0;
@@ -81,14 +81,14 @@
             display: block;
         }
 
-        /* Vùng click vào cửa tiệm */
+        /* Vùng click vào cửa tiệm (Đã sửa lại hit-box cho chuẩn) */
         .door-hotspot {
             position: absolute;
             bottom: 12%;
-            left: 47%;
+            left: 51.3%;
             transform: translateX(-50%);
             width: 12%;
-            height: 35%;
+            height: 40%;
             cursor: pointer;
             background: rgba(255, 105, 180, 0.25);
             border: 2px dashed rgba(255, 20, 147, 0.7);
@@ -120,9 +120,9 @@
             display: none !important;
         }
 
-        /* Cảnh 2: Bên trong tiệm - Làm bó hoa */
+        /* Cảnh 2: Bên trong tiệm - Làm bó hoa kiểu mới gọn gàng */
         .workshop-box {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 182, 193, 0.6);
             border-radius: 20px;
             padding: 30px;
@@ -137,75 +137,66 @@
             font-family: 'Dancing Script', cursive;
             font-size: 2.8rem;
             color: #d81b60;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .instruction {
             color: #665c68;
-            margin-bottom: 25px;
-            font-size: 1rem;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
         }
 
+        /* Khung chứa các bông hoa ở trên */
         .table-area {
             display: flex;
             justify-content: space-around;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-            min-height: 150px;
-            background: rgba(255, 240, 243, 0.7);
-            padding: 20px;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 240, 243, 0.6);
+            padding: 18px;
             border-radius: 15px;
             border: 1px dashed #ffb3c6;
         }
 
         .flower-item {
-            font-size: 3rem;
-            cursor: grab;
+            font-size: 2.8rem;
+            cursor: pointer;
             transition: transform 0.2s;
             user-select: none;
-        }
-
-        .flower-item:active {
-            cursor: grabbing;
         }
 
         .flower-item:hover {
             transform: scale(1.2);
         }
 
-        /* Khu vực giấy gói hoa (Drop Zone) */
+        /* Khu vực giấy gói hoa ở dưới dạng khung vuông */
         .wrapping-paper-zone {
-            width: 260px;
-            height: 200px;
-            border: 3px dashed #ff69b4;
+            width: 240px;
+            height: 220px;
+            border: 2px dashed #ff69b4;
             border-radius: 20px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 182, 193, 0.15);
+            background: rgba(255, 182, 193, 0.12);
             position: relative;
             transition: background 0.3s;
-        }
-
-        .wrapping-paper-zone.drag-over {
-            background: rgba(255, 182, 193, 0.35);
-            border-color: #d81b60;
         }
 
         .collected-flowers {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 8px;
             justify-content: center;
-            max-width: 200px;
+            max-width: 180px;
         }
 
         .collected-flower {
-            font-size: 2rem;
+            font-size: 2.2rem;
             animation: popIn 0.3s ease;
         }
 
@@ -217,26 +208,26 @@
 
         /* Bó hoa hoàn thành */
         .bouquet-result {
-            margin-top: 20px;
+            margin-top: 15px;
             cursor: pointer;
             animation: bounce 1.5s infinite;
         }
 
         .bouquet-result span {
-            font-size: 4.5rem;
+            font-size: 4rem;
             display: block;
         }
 
         .bouquet-result p {
             font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #d81b60;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
 
         /* Cảnh 3: Bức thư & Feedback */
@@ -267,12 +258,17 @@
             text-align: center;
         }
 
+        /* Căn chỉnh ảnh người nhận: Đã hạ thấp xuống 30% để không bị che phần trên khuôn mặt */
         .letter-image img {
-            width: 100%;
-            max-height: 300px;
+            width: 220px;
+            height: 220px;
             object-fit: cover;
-            border-radius: 15px;
-            border: 2px solid rgba(255, 182, 193, 0.8);
+            object-position: center 30%;
+            border-radius: 50%;
+            border: 4px solid #ff69b4;
+            box-shadow: 0 8px 20px rgba(216, 27, 96, 0.2);
+            margin: 0 auto;
+            display: block;
         }
 
         .letter-text-content {
@@ -360,14 +356,14 @@
 
     <!-- Thẻ Audio nhạc nền -->
     <audio id="bg-music" loop preload="auto">
-        <source src="./audio/nhacThai.mp3" type="audio/mpeg">
+        <source src="./audio/nhacnhacThai.mp3" type="audio/mpeg">
         Trình duyệt của bạn không hỗ trợ thẻ audio.
     </audio>
 
     <!-- CẢNH 1: Tiệm hoa bên ngoài -->
     <div id="scene-exterior" class="scene">
         <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: #d81b60;">Tiệm Hoa Quanh Năm 🌸</h2>
+            <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: #d81b60;">Tiệm Hoa Chỉ Mở Một Lần Trong Năm 🌸</h2>
             <p style="color: #665c68;">Chạm vào cánh cửa tiệm để bước vào bên trong nhận món quà 20/10 nhé!</p>
         </div>
         <div class="shop-container">
@@ -378,26 +374,31 @@
         </div>
     </div>
 
-    <!-- CẢNH 2: Bên trong tiệm - Kéo thả hoa làm bó hoa -->
+    <!-- CẢNH 2: Bên trong tiệm - Click chọn hoa -->
     <div id="scene-workshop" class="scene hidden">
         <div class="workshop-box">
             <h2 class="workshop-title">Góc Tự Tay Bó Hoa 💐</h2>
-            <p class="instruction">Hãy kéo (hoặc bấm vào) từng bông hoa trên bàn bỏ vào giấy gói bên dưới để tạo thành bó hoa nhé!</p>
+            <p class="instruction">Hãy bấm vào từng bông hoa trên bàn để đặt vào giấy gói bên dưới nhé!</p>
             
+            <!-- Hàng hoa ở trên -->
             <div class="table-area" id="flowers-table">
-                <div class="flower-item" draggable="true" data-flower="🌹">🌹</div>
-                <div class="flower-item" draggable="true" data-flower="🌷">🌷</div>
-                <div class="flower-item" draggable="true" data-flower="🌻">🌻</div>
-                <div class="flower-item" draggable="true" data-flower="🌸">🌸</div>
-                <div class="flower-item" draggable="true" data-flower="💐">💐</div>
+                <div class="flower-item" data-flower="🌹">🌹</div>
+                <div class="flower-item" data-flower="🌷">🌷</div>
+                <div class="flower-item" data-flower="🌻">🌻</div>
+                <div class="flower-item" data-flower="🌸">🌸</div>
+                <div class="flower-item" data-flower="💐">💐</div>
             </div>
 
-            <p style="font-size: 0.9rem; color: #665c68; margin-bottom: 10px;">Giấy gói hoa:</p>
+            <p style="font-size: 0.9rem; color: #665c68; margin-bottom: 8px;">Giấy gói hoa:</p>
+            
+            <!-- Khung giấy gói ở dưới -->
             <div class="wrapping-paper-zone" id="paper-zone">
-                <span style="font-size: 2rem; color: #d81b60;" id="paper-label">📄 Giấy gói</span>
-                <div class="collected-flowers" id="collected-box"></div>
+                <div class="collected-flowers" id="collected-box">
+                    <span style="font-size: 1.8rem; color: #d81b60;" id="paper-label">📄 Giấy gói</span>
+                </div>
             </div>
 
+            <!-- Bó hoa hoàn thành xuất hiện khi chọn đủ -->
             <div id="bouquet-container" class="bouquet-result hidden">
                 <span id="final-bouquet-icon">💐✨</span>
                 <p>Tặng người đẹp bó hoa ❤️</p>
@@ -456,7 +457,7 @@
         let totalFlowers = flowerItems.length;
         let collectedCount = 0;
 
-        // 1. Mở cửa tiệm -> Bật nhạc và chuyển cảnh sang góc bó hoa
+        // 1. Mở cửa tiệm -> Bật nhạc và chuyển cảnh
         doorBtn.addEventListener('click', () => {
             bgMusic.play().catch(err => console.log("Lỗi phát nhạc:", err));
             
@@ -469,59 +470,37 @@
             }, 500);
         });
 
-        // 2. Xử lý kéo thả và click chọn hoa vào giấy gói
+        // 2. Click vào hoa để đưa vào giấy gói
         flowerItems.forEach(item => {
-            item.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', item.dataset.flower);
-            });
-
             item.addEventListener('click', () => {
-                addFlowerToPaper(item.dataset.flower);
+                if (item.style.display === 'none') return;
+
+                // Ẩn hoa trên bàn
                 item.style.display = 'none';
-            });
-        });
 
-        paperZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            paperZone.classList.add('drag-over');
-        });
+                // Xóa chữ "Giấy gói" ở lần click đầu tiên
+                if (collectedCount === 0 && paperLabel) {
+                    paperLabel.remove();
+                }
 
-        paperZone.addEventListener('dragleave', () => {
-            paperZone.classList.remove('drag-over');
-        });
+                // Thêm hoa vào khung giấy gói bên dưới
+                collectedCount++;
+                const span = document.createElement('span');
+                span.classList.add('collected-flower');
+                span.textContent = item.dataset.flower;
+                collectedBox.appendChild(span);
 
-        paperZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            paperZone.classList.remove('drag-over');
-            const flowerSymbol = e.dataTransfer.getData('text/plain');
-            
-            flowerItems.forEach(item => {
-                if(item.dataset.flower === flowerSymbol && item.style.display !== 'none') {
-                    item.style.display = 'none';
-                    addFlowerToPaper(flowerSymbol);
-                    return;
+                // Khi đã chọn hết các bông hoa -> Hiển thị bó hoa hoàn thành
+                if (collectedCount >= totalFlowers) {
+                    setTimeout(() => {
+                        paperZone.style.display = 'none';
+                        document.querySelector('.table-area').style.display = 'none';
+                        document.querySelector('.instruction').style.display = 'none';
+                        bouquetContainer.classList.remove('hidden');
+                    }, 400);
                 }
             });
         });
-
-        function addFlowerToPaper(symbol) {
-            collectedCount++;
-            paperLabel.style.display = 'none';
-            
-            const span = document.createElement('span');
-            span.classList.add('collected-flower');
-            span.textContent = symbol;
-            collectedBox.appendChild(span);
-
-            if (collectedCount >= totalFlowers) {
-                setTimeout(() => {
-                    paperZone.style.display = 'none';
-                    document.querySelector('.table-area').style.display = 'none';
-                    document.querySelector('.instruction').style.display = 'none';
-                    bouquetContainer.classList.remove('hidden');
-                }, 400);
-            }
-        }
 
         // 3. Click vào bó hoa hoàn thành -> Mở bức thư & form feedback
         bouquetContainer.addEventListener('click', () => {

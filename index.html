@@ -81,11 +81,11 @@
             display: block;
         }
 
-        /* Vùng click vào cửa tiệm (Đã sửa lại hit-box cho chuẩn) */
+        /* Vùng click vào cửa tiệm */
         .door-hotspot {
             position: absolute;
             bottom: 12%;
-            left: 51%;
+            left: 54%;
             transform: translateX(-50%);
             width: 12%;
             height: 40%;
@@ -120,7 +120,7 @@
             display: none !important;
         }
 
-        /* Cảnh 2: Bên trong tiệm - Làm bó hoa kiểu mới gọn gàng */
+        /* Cảnh 2: Bên trong tiệm - Làm bó hoa */
         .workshop-box {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 182, 193, 0.6);
@@ -171,7 +171,7 @@
             transform: scale(1.2);
         }
 
-        /* Khu vực giấy gói hoa ở dưới dạng khung vuông */
+        /* Khu vực giấy gói hoa ở dưới */
         .wrapping-paper-zone {
             width: 240px;
             height: 220px;
@@ -258,7 +258,6 @@
             text-align: center;
         }
 
-        /* Căn chỉnh ảnh người nhận: Đã hạ thấp xuống 30% để không bị che phần trên khuôn mặt */
         .letter-image img {
             width: 220px;
             height: 220px;
@@ -344,17 +343,29 @@
         .feedback-box button:hover {
             opacity: 0.9;
         }
+
+        .feedback-box button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #form-status {
+            margin-top: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Hiệu ứng sáng nền Ambient Light tông hồng nhẹ -->
+    <!-- Ambient Light Background -->
     <div class="ambient-bg">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Thẻ Audio nhạc nền -->
+    <!-- Audio nhạc nền -->
     <audio id="bg-music" loop preload="auto">
         <source src="./audio/nhacThai.mp3" type="audio/mpeg">
         Trình duyệt của bạn không hỗ trợ thẻ audio.
@@ -374,13 +385,12 @@
         </div>
     </div>
 
-    <!-- CẢNH 2: Bên trong tiệm - Click chọn hoa -->
+    <!-- CẢNH 2: Bên trong tiệm - Chọn hoa -->
     <div id="scene-workshop" class="scene hidden">
         <div class="workshop-box">
             <h2 class="workshop-title">Góc Tự Tay Bó Hoa 💐</h2>
             <p class="instruction">Hãy bấm vào từng bông hoa trên bàn để đặt vào giấy gói bên dưới nhé!</p>
             
-            <!-- Hàng hoa ở trên -->
             <div class="table-area" id="flowers-table">
                 <div class="flower-item" data-flower="🌹">🌹</div>
                 <div class="flower-item" data-flower="🌷">🌷</div>
@@ -391,14 +401,12 @@
 
             <p style="font-size: 0.9rem; color: #665c68; margin-bottom: 8px;">Giấy gói hoa:</p>
             
-            <!-- Khung giấy gói ở dưới -->
             <div class="wrapping-paper-zone" id="paper-zone">
                 <div class="collected-flowers" id="collected-box">
                     <span style="font-size: 1.8rem; color: #d81b60;" id="paper-label">📄 Giấy gói</span>
                 </div>
             </div>
 
-            <!-- Bó hoa hoàn thành xuất hiện khi chọn đủ -->
             <div id="bouquet-container" class="bouquet-result hidden">
                 <span id="final-bouquet-icon">💐✨</span>
                 <p>Tặng người đẹp bó hoa ❤️</p>
@@ -426,7 +434,8 @@
 
             <div class="feedback-box">
                 <h3 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #d81b60; margin-bottom: 15px;">Góc Phản Hồi & Tâm Sự 💌</h3>
-                <form action="https://formspree.io/f/moejlzpo" method="POST">
+                <!-- Đã loại bỏ action/method mặc định của form -->
+                <form id="feedback-form">
                     <div>
                         <label for="name">Tên của cậu:</label>
                         <input type="text" id="name" name="name" required placeholder="Nhập tên của cậu...">
@@ -435,8 +444,9 @@
                         <label for="message">Cảm nhận hoặc lời nhắn lại:</label>
                         <textarea id="message" name="message" rows="4" required placeholder="Nhập lời nhắn gửi về cho tớ nhé..."></textarea>
                     </div>
-                    <button type="submit">Gửi Phản Hồi 🚀</button>
+                    <button type="submit" id="submit-btn">Gửi Phản Hồi 🚀</button>
                 </form>
+                <p id="form-status"></p>
             </div>
         </div>
     </div>
@@ -475,22 +485,18 @@
             item.addEventListener('click', () => {
                 if (item.style.display === 'none') return;
 
-                // Ẩn hoa trên bàn
                 item.style.display = 'none';
 
-                // Xóa chữ "Giấy gói" ở lần click đầu tiên
                 if (collectedCount === 0 && paperLabel) {
                     paperLabel.remove();
                 }
 
-                // Thêm hoa vào khung giấy gói bên dưới
                 collectedCount++;
                 const span = document.createElement('span');
                 span.classList.add('collected-flower');
                 span.textContent = item.dataset.flower;
                 collectedBox.appendChild(span);
 
-                // Khi đã chọn hết các bông hoa -> Hiển thị bó hoa hoàn thành
                 if (collectedCount >= totalFlowers) {
                     setTimeout(() => {
                         paperZone.style.display = 'none';
@@ -511,6 +517,55 @@
                 sceneLetter.style.opacity = '0';
                 setTimeout(() => sceneLetter.style.opacity = '1', 50);
             }, 500);
+        });
+
+        // 4. Xử lý gửi Formspree bằng AJAX ngầm (Không bị nhảy trang)
+        const feedbackForm = document.getElementById('feedback-form');
+        const formStatus = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-btn');
+
+        feedbackForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang gửi...';
+            formStatus.style.color = '#d81b60';
+            formStatus.textContent = '';
+
+            const formData = new FormData(feedbackForm);
+
+            try {
+                const response = await fetch('https://formspree.io/f/moejlzpo', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    formStatus.style.color = '#2e7d32';
+                    formStatus.textContent = 'Cảm ơn cậu đã gửi lời nhắn cho tớ nhé! 💖';
+                    feedbackForm.reset();
+                    submitBtn.textContent = 'Đã Gửi Thành Công ✨';
+                } else {
+                    const data = await response.json();
+                    if (Object.hasOwn(data, 'errors')) {
+                        formStatus.style.color = '#d32f2f';
+                        formStatus.textContent = data["errors"].map(error => error["message"]).join(", ");
+                    } else {
+                        formStatus.style.color = '#d32f2f';
+                        formStatus.textContent = 'Có lỗi xảy ra khi gửi, cậu thử lại giúp tớ nhé!';
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Gửi Phản Hồi 🚀';
+                }
+            } catch (error) {
+                formStatus.style.color = '#d32f2f';
+                formStatus.textContent = 'Có lỗi kết nối, cậu kiểm tra lại mạng giúp tớ nhé!';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gửi Phản Hồi 🚀';
+            }
         });
     </script>
 </body>

@@ -54,7 +54,7 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* Cảnh 1: Tiệm hoa bên ngoài */
+        /* Cảnh chung cho các màn */
         .scene {
             width: 100%;
             max-width: 900px;
@@ -85,7 +85,7 @@
         .door-hotspot {
             position: absolute;
             bottom: 12%;
-            left: 52%;
+            left: 51%;
             transform: translateX(-50%);
             width: 12%;
             height: 40%;
@@ -146,7 +146,6 @@
             font-size: 0.95rem;
         }
 
-        /* Khung chứa các bông hoa ở trên */
         .table-area {
             display: flex;
             justify-content: space-around;
@@ -171,7 +170,6 @@
             transform: scale(1.2);
         }
 
-        /* Khu vực giấy gói hoa ở dưới */
         .wrapping-paper-zone {
             width: 240px;
             height: 220px;
@@ -206,7 +204,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Bó hoa hoàn thành */
         .bouquet-result {
             margin-top: 15px;
             cursor: pointer;
@@ -365,20 +362,19 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Audio nhạc nền -->
-    <audio id="bg-music" loop preload="auto">
-        <source src="./audio/nhacThai.mp3" type="audio/mpeg">
+    <!-- Thẻ Audio hỗ trợ Playlist nhạc -->
+    <audio id="bg-music" preload="auto">
         Trình duyệt của bạn không hỗ trợ thẻ audio.
     </audio>
 
     <!-- CẢNH 1: Tiệm hoa bên ngoài -->
     <div id="scene-exterior" class="scene">
         <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: #d81b60;">Tiệm Hoa Chỉ Mở Một Lần Trong Năm 🌸</h2>
+            <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: #d81b60;">Tiệm Hoa Của Linh 🌸</h2>
             <p style="color: #665c68;">Chạm vào cánh cửa tiệm để bước vào bên trong nhận món quà 20/10 nhé!</p>
         </div>
         <div class="shop-container">
-            <img src="./images/shop1.jpg" alt="Tiệm hoa quanh năm">
+            <img src="./images/shop1.jpg" alt="Tiệm hoa của Linh">
             <div class="door-hotspot" id="door-btn">
                 Mở Cửa 🚪✨
             </div>
@@ -409,7 +405,7 @@
 
             <div id="bouquet-container" class="bouquet-result hidden">
                 <span id="final-bouquet-icon">💐✨</span>
-                <p>Tặng người đẹp bó hoa ❤️</p>
+                <p>Tặng Linh bó hoa ❤️</p>
                 <p style="font-size: 0.85rem; color: #d81b60; font-family: 'Montserrat', sans-serif; margin-top: 5px;">(Click vào bó hoa để mở thư và xem quà nhé!)</p>
             </div>
         </div>
@@ -434,7 +430,6 @@
 
             <div class="feedback-box">
                 <h3 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #d81b60; margin-bottom: 15px;">Góc Phản Hồi & Tâm Sự 💌</h3>
-                <!-- Đã loại bỏ action/method mặc định của form -->
                 <form id="feedback-form">
                     <div>
                         <label for="name">Tên của cậu:</label>
@@ -453,7 +448,6 @@
 
     <script>
         const doorBtn = document.getElementById('door-btn');
-        const bgMusic = document.getElementById('bg-music');
         const sceneExterior = document.getElementById('scene-exterior');
         const sceneWorkshop = document.getElementById('scene-workshop');
         const sceneLetter = document.getElementById('scene-letter');
@@ -467,9 +461,31 @@
         let totalFlowers = flowerItems.length;
         let collectedCount = 0;
 
-        // 1. Mở cửa tiệm -> Bật nhạc và chuyển cảnh
-        doorBtn.addEventListener('click', () => {
+        // --- Cấu hình Playlist Nhạc Tự Động Chuyển Bài ---
+        const playlist = [
+            './audio/nhacThai.mp3',
+            './audio/mono_2.mp3',
+            // Thêm các bài tiếp theo vào đây nếu muốn, ví dụ: './audio/bai2.mp3'
+        ];
+        let currentTrackIndex = 0;
+        const bgMusic = document.getElementById('bg-music');
+
+        function playTrack(index) {
+            if (index >= playlist.length) {
+                currentTrackIndex = 0; // Quay vòng lại bài đầu tiên khi hết list
+            }
+            bgMusic.src = playlist[currentTrackIndex];
             bgMusic.play().catch(err => console.log("Lỗi phát nhạc:", err));
+        }
+
+        bgMusic.addEventListener('ended', () => {
+            currentTrackIndex++;
+            playTrack(currentTrackIndex);
+        });
+
+        // 1. Mở cửa tiệm -> Phát nhạc playlist & chuyển cảnh
+        doorBtn.addEventListener('click', () => {
+            playTrack(currentTrackIndex);
             
             sceneExterior.style.opacity = '0';
             setTimeout(() => {
@@ -519,13 +535,12 @@
             }, 500);
         });
 
-        // 4. Xử lý gửi Formspree bằng AJAX tối ưu cho cả điện thoại
+        // 4. Xử lý gửi Formspree bằng AJAX ngầm (Không bị nhảy trang trên cả máy tính & điện thoại)
         const feedbackForm = document.getElementById('feedback-form');
         const formStatus = document.getElementById('form-status');
         const submitBtn = document.getElementById('submit-btn');
 
         feedbackForm.addEventListener('submit', async function(e) {
-            // Chặn đứng hoàn toàn hành vi chuyển trang mặc định trên mọi thiết bị
             e.preventDefault();
             e.stopPropagation();
             

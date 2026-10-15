@@ -54,6 +54,120 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
+        /* --- TRÌNH PHÁT NHẠC ĐĨA THAN GÓC TRÊN BÊN TRÁI --- */
+        .music-player-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 16px;
+            border-radius: 40px;
+            box-shadow: 0 8px 25px rgba(216, 27, 96, 0.15);
+            border: 1px solid rgba(255, 182, 193, 0.6);
+            backdrop-filter: blur(15px);
+            max-width: 280px;
+        }
+
+        /* Đĩa quay minh họa */
+        .vinyl-disc {
+            width: 42px;
+            height: 42px;
+            background: #111;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid #ff69b4;
+            flex-shrink: 0;
+            animation: spin 4s linear infinite;
+            animation-play-state: paused; /* Mặc định đứng im khi chưa phát */
+        }
+
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ffb3c6;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .music-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .song-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #d81b60;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Thanh thời gian chạy mềm mại */
+        .progress-bar-container {
+            width: 100%;
+            height: 5px;
+            background: #ffd1dc;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #d81b60);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        /* Các nút bấm điều khiển nhạc bo tròn mềm mại */
+        .music-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .music-btn {
+            background: linear-gradient(135deg, #ffb3c6, #ff8da1);
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(216, 27, 96, 0.2);
+        }
+
+        .music-btn:hover {
+            background: linear-gradient(135deg, #ff69b4, #d81b60);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.3);
+        }
+
         /* Cảnh chung cho các màn */
         .scene {
             width: 100%;
@@ -69,7 +183,7 @@
             position: relative;
             width: 100%;
             max-width: 800px;
-            border-radius: 20px;
+            border-radius: 25px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(212, 133, 149, 0.25);
             border: 2px solid rgba(255, 182, 193, 0.5);
@@ -92,7 +206,7 @@
             cursor: pointer;
             background: rgba(255, 105, 180, 0.25);
             border: 2px dashed rgba(255, 20, 147, 0.7);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -124,7 +238,7 @@
         .workshop-box {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 182, 193, 0.6);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 30px;
             width: 100%;
             max-width: 800px;
@@ -155,7 +269,7 @@
             margin-bottom: 20px;
             background: rgba(255, 240, 243, 0.6);
             padding: 18px;
-            border-radius: 15px;
+            border-radius: 20px;
             border: 1px dashed #ffb3c6;
         }
 
@@ -174,7 +288,7 @@
             width: 240px;
             height: 220px;
             border: 2px dashed #ff69b4;
-            border-radius: 20px;
+            border-radius: 25px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -241,7 +355,7 @@
             gap: 25px;
             background: rgba(255, 255, 255, 0.85);
             border: 1px solid rgba(255, 182, 193, 0.6);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 30px;
             backdrop-filter: blur(15px);
             align-items: center;
@@ -289,7 +403,7 @@
         .feedback-box {
             background: rgba(255, 255, 255, 0.85);
             border: 1px solid rgba(255, 182, 193, 0.6);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 30px;
             backdrop-filter: blur(15px);
             box-shadow: 0 10px 30px rgba(212, 133, 149, 0.15);
@@ -312,7 +426,7 @@
             padding: 12px;
             background: #fff0f3;
             border: 1px solid #ffb3c6;
-            border-radius: 8px;
+            border-radius: 12px;
             color: #4a3b4c;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
@@ -324,26 +438,31 @@
             background: #fff;
         }
 
+        /* Nút Gửi Feedback mềm mại */
         .feedback-box button {
             padding: 12px;
-            background: linear-gradient(135deg, #ff69b4, #d81b60);
+            background: linear-gradient(135deg, #ff9aae, #ff69b4);
             border: none;
-            border-radius: 8px;
+            border-radius: 20px;
             color: white;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
-            transition: opacity 0.2s;
-            box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.25);
         }
 
         .feedback-box button:hover {
-            opacity: 0.9;
+            background: linear-gradient(135deg, #ff69b4, #d81b60);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(216, 27, 96, 0.35);
         }
 
         .feedback-box button:disabled {
-            background: #ccc;
+            background: #e0d0d5;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         #form-status {
@@ -355,6 +474,24 @@
     </style>
 </head>
 <body>
+
+    <!-- --- TRÌNH PHÁT NHẠC ĐĨA THAN GÓC TRÊN TRÁI --- -->
+    <div class="music-player-box">
+        <!-- Đĩa quay minh họa -->
+        <div class="vinyl-disc" id="vinyl-disc"></div>
+        <div class="music-info">
+            <div class="song-title" id="song-title">Đang phát: Nhạc Thái 🎵</div>
+            <!-- Thanh thời gian chạy -->
+            <div class="progress-bar-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <!-- Các nút bấm mềm mại -->
+            <div class="music-controls">
+                <button class="music-btn" id="play-pause-btn">⏸️ Dừng</button>
+                <button class="music-btn" id="next-music-btn">⏭️ Next</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Ambient Light Background -->
     <div class="ambient-bg">
@@ -461,21 +598,34 @@
         let totalFlowers = flowerItems.length;
         let collectedCount = 0;
 
-        // --- Cấu hình Playlist Nhạc Tự Động Chuyển Bài ---
+        // --- Cấu hình Playlist Nhạc (Cậu có thể đổi tên bài hát tương ứng ở mảng title bên dưới) ---
         const playlist = [
-            './audio/nhacThai.mp3',
-            './audio/mono_2.mp3',
-            // Thêm các bài tiếp theo vào đây nếu muốn, ví dụ: './audio/bai2.mp3'
+            { src: './audio/nhacThai.mp3', 
+            title: 'ถ้าเธอรักใครคนหนึ่ง (If You Love Someone)' },
+            { src: './audio/mono_2.mp3', 
+            title: 'Sandwich & Story' } // Thêm bài tiếp theo tùy ý
         ];
+        
         let currentTrackIndex = 0;
         const bgMusic = document.getElementById('bg-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const nextMusicBtn = document.getElementById('next-music-btn');
+        const vinylDisc = document.getElementById('vinyl-disc');
+        const songTitle = document.getElementById('song-title');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
 
         function playTrack(index) {
             if (index >= playlist.length) {
-                currentTrackIndex = 0; // Quay vòng lại bài đầu tiên khi hết list
+                currentTrackIndex = 0; // Vòng lặp lại từ bài đầu tiên khi hết list
             }
-            bgMusic.src = playlist[currentTrackIndex];
-            bgMusic.play().catch(err => console.log("Lỗi phát nhạc:", err));
+            bgMusic.src = playlist[currentTrackIndex].src;
+            songTitle.textContent = `Đang phát: ${playlist[currentTrackIndex].title}`;
+            
+            bgMusic.play().then(() => {
+                playPauseBtn.textContent = '⏸️ Dừng';
+                vinylDisc.style.animationPlayState = 'running'; // Đĩa quay
+            }).catch(err => console.log("Lỗi phát nhạc:", err));
         }
 
         bgMusic.addEventListener('ended', () => {
@@ -483,7 +633,25 @@
             playTrack(currentTrackIndex);
         });
 
-        // 1. Mở cửa tiệm -> Phát nhạc playlist & chuyển cảnh
+        // Cập nhật thanh thời gian chạy
+        bgMusic.addEventListener('timeupdate', () => {
+            if (bgMusic.duration) {
+                const progressPercent = (bgMusic.currentTime / bgMusic.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        });
+
+        // Tua nhạc khi bấm vào thanh thời gian
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = bgMusic.duration;
+            if (duration) {
+                bgMusic.currentTime = (clickX / width) * duration;
+            }
+        });
+
+        // 1. Mở cửa tiệm -> Bật nhạc tự động & chuyển cảnh
         doorBtn.addEventListener('click', () => {
             playTrack(currentTrackIndex);
             
@@ -496,7 +664,30 @@
             }, 500);
         });
 
-        // 2. Click vào hoa để đưa vào giấy gói
+        // 2. Nút Dừng / Phát nhạc
+        playPauseBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                if (!bgMusic.src) {
+                    playTrack(currentTrackIndex);
+                } else {
+                    bgMusic.play();
+                }
+                playPauseBtn.textContent = '⏸️ Dừng';
+                vinylDisc.style.animationPlayState = 'running';
+            } else {
+                bgMusic.pause();
+                playPauseBtn.textContent = '▶️ Phát';
+                vinylDisc.style.animationPlayState = 'paused';
+            }
+        });
+
+        // 3. Nút Chuyển bài tiếp theo (Next)
+        nextMusicBtn.addEventListener('click', () => {
+            currentTrackIndex++;
+            playTrack(currentTrackIndex);
+        });
+
+        // 4. Click vào hoa để đưa vào giấy gói
         flowerItems.forEach(item => {
             item.addEventListener('click', () => {
                 if (item.style.display === 'none') return;
@@ -524,7 +715,7 @@
             });
         });
 
-        // 3. Click vào bó hoa hoàn thành -> Mở bức thư & form feedback
+        // 5. Click vào bó hoa hoàn thành -> Mở bức thư & form feedback
         bouquetContainer.addEventListener('click', () => {
             sceneWorkshop.style.opacity = '0';
             setTimeout(() => {
@@ -535,7 +726,7 @@
             }, 500);
         });
 
-        // 4. Xử lý gửi Formspree bằng AJAX ngầm (Không bị nhảy trang trên cả máy tính & điện thoại)
+        // 6. Xử lý gửi Formspree bằng AJAX ngầm không nhảy trang
         const feedbackForm = document.getElementById('feedback-form');
         const formStatus = document.getElementById('form-status');
         const submitBtn = document.getElementById('submit-btn');

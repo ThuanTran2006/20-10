@@ -72,7 +72,6 @@
             max-width: 280px;
         }
 
-        /* Đĩa quay minh họa */
         .vinyl-disc {
             width: 42px;
             height: 42px;
@@ -121,7 +120,6 @@
             text-overflow: ellipsis;
         }
 
-        /* Thanh thời gian chạy mềm mại */
         .progress-bar-container {
             width: 100%;
             height: 5px;
@@ -139,7 +137,6 @@
             transition: width 0.1s linear;
         }
 
-        /* Các nút bấm điều khiển nhạc bo tròn mềm mại */
         .music-controls {
             display: flex;
             gap: 6px;
@@ -199,7 +196,7 @@
         .door-hotspot {
             position: absolute;
             bottom: 12%;
-            left: 52%;
+            left: 54%;
             transform: translateX(-50%);
             width: 12%;
             height: 40%;
@@ -234,7 +231,7 @@
             display: none !important;
         }
 
-        /* Cảnh 2: Bên trong tiệm - Làm bó hoa */
+        /* Cảnh 2: Bên trong tiệm - Chọn hoa */
         .workshop-box {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 182, 193, 0.6);
@@ -274,14 +271,23 @@
         }
 
         .flower-item {
-            font-size: 2.8rem;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s;
-            user-select: none;
+            transition: transform 0.25s ease;
+            box-shadow: 0 4px 10px rgba(212, 133, 149, 0.1);
+        }
+
+        .flower-item img {
+            height: 95px;
+            width: auto;
+            display: block;
+            object-fit: contain;
         }
 
         .flower-item:hover {
-            transform: scale(1.2);
+            transform: translateY(-6px) scale(1.08);
         }
 
         .wrapping-paper-zone {
@@ -302,13 +308,15 @@
         .collected-flowers {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             justify-content: center;
-            max-width: 180px;
+            max-width: 190px;
         }
 
-        .collected-flower {
-            font-size: 2.2rem;
+        .collected-flower img {
+            height: 55px;
+            width: auto;
+            object-fit: contain;
             animation: popIn 0.3s ease;
         }
 
@@ -318,15 +326,20 @@
             100% { transform: scale(1); }
         }
 
+        /* Bó hoa hoàn thành lớn xuất hiện khi chọn xong */
         .bouquet-result {
             margin-top: 15px;
             cursor: pointer;
             animation: bounce 1.5s infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .bouquet-result span {
-            font-size: 4rem;
-            display: block;
+        .bouquet-result img {
+            width: 220px;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(216, 27, 96, 0.3));
         }
 
         .bouquet-result p {
@@ -398,7 +411,7 @@
             line-height: 1.8;
             color: #554857;
             white-space: pre-line;
-            min-height: 120px; /* Tránh bị giật layout khi chữ đang chạy */
+            min-height: 120px;
         }
 
         .feedback-box {
@@ -422,7 +435,7 @@
             font-weight: 600;
         }
 
-        .feedback-box input, .feedback-box textarea {
+        .feedback-box textarea {
             width: 100%;
             padding: 12px;
             background: #fff0f3;
@@ -433,7 +446,7 @@
             font-size: 1rem;
         }
 
-        .feedback-box input:focus, .feedback-box textarea:focus {
+        .feedback-box textarea:focus {
             outline: none;
             border-color: #d81b60;
             background: #fff;
@@ -507,7 +520,7 @@
             <p style="color: #665c68;">Chạm vào cánh cửa tiệm để bước vào bên trong nhận món quà 20/10 nhé!</p>
         </div>
         <div class="shop-container">
-            <img src="./images/shop1.jpg" alt="Tiệm hoa của Linh">
+            <img src="./images/shop.jpg" alt="Tiệm hoa của Linh">
             <div class="door-hotspot" id="door-btn">
                 Mở Cửa 🚪✨
             </div>
@@ -518,26 +531,37 @@
     <div id="scene-workshop" class="scene hidden">
         <div class="workshop-box">
             <h2 class="workshop-title">Góc Tự Tay Bó Hoa 💐</h2>
-            <p class="instruction">Hãy bấm vào từng bông hoa trên bàn để đặt vào giấy gói bên dưới nhé!</p>
+            <p class="instruction">Hãy chạm vào từng cành hoa trên bàn để đặt vào giấy gói nhé!</p>
             
             <div class="table-area" id="flowers-table">
-                <div class="flower-item" data-flower="🌹">🌹</div>
-                <div class="flower-item" data-flower="🌷">🌷</div>
-                <div class="flower-item" data-flower="🌻">🌻</div>
-                <div class="flower-item" data-flower="🌸">🌸</div>
-                <div class="flower-item" data-flower="💐">💐</div>
-            </div>
-
-            <p style="font-size: 0.9rem; color: #665c68; margin-bottom: 8px;">Giấy gói hoa:</p>
-            
-            <div class="wrapping-paper-zone" id="paper-zone">
-                <div class="collected-flowers" id="collected-box">
-                    <span style="font-size: 1.8rem; color: #d81b60;" id="paper-label">📄 Giấy gói</span>
+                <div class="flower-item">
+                    <img src="./images/hong_gpt.png" alt="Hoa 1">
+                </div>
+                <div class="flower-item">
+                    <img src="./images/hong_nhat_gpt.png" alt="Hoa 2">
+                </div>
+                <div class="flower-item">
+                    <img src="./images/cam_gpt.png" alt="Hoa 3">
+                </div>
+                <div class="flower-item">
+                    <img src="./images/xanh_duong_gpt.png" alt="Hoa 4">
+                </div>
+                <div class="flower-item">
+                    <img src="./images/xanh_nhat_gpt.png" alt="Hoa 5">
                 </div>
             </div>
 
+            <p style="font-size: 0.9rem; color: #665c68; margin-bottom: 8px;" id="wrapping-text">Giấy gói hoa:</p>
+            
+            <div class="wrapping-paper-zone" id="paper-zone">
+                <div class="collected-flowers" id="collected-box">
+                    <span style="font-size: 1.8rem; color: #d81b60;" id="paper-label"> Giấy gói</span>
+                </div>
+            </div>
+
+            <!-- Bó hoa hoàn thành lớn xuất hiện (dùng file bohoa.png) -->
             <div id="bouquet-container" class="bouquet-result hidden">
-                <span id="final-bouquet-icon">💐✨</span>
+                <img src="./images/bohoa_gpt.png" alt="Bó hoa hoàn thành">
                 <p>Tặng Linh bó hoa ❤️</p>
                 <p style="font-size: 0.85rem; color: #d81b60; font-family: 'Montserrat', sans-serif; margin-top: 5px;">(Click vào bó hoa để mở thư và xem quà nhé!)</p>
             </div>
@@ -553,7 +577,6 @@
                 </div>
                 <div class="letter-text-content">
                     <h3>Gửi Linh, <span style="font-family: 'Gamja Flower', cursive; font-size: 1.1em;">하린</span>,</h3>
-                    <!-- Thêm ID để chạy hiệu ứng đánh máy -->
                     <div class="letter-body" id="letter-text"></div>
                 </div>
             </div>
@@ -561,9 +584,8 @@
             <div class="feedback-box">
                 <h3 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #d81b60; margin-bottom: 15px;">Góc Phản Hồi & Tâm Sự 💌</h3>
                 <form id="feedback-form">
-                    
                     <div>
-                        <label for="message">Cảm nhận hoặc lời nhắn lại:</label>
+                        <label for="message">Cảm nhận hoặc lời nhắn lại của Linh:</label>
                         <textarea id="message" name="message" rows="4" required placeholder="Nhập lời nhắn gửi về cho tớ nhé..."></textarea>
                     </div>
                     <button type="submit" id="submit-btn">Gửi Phản Hồi 🚀</button>
@@ -581,6 +603,7 @@
 
         const flowerItems = document.querySelectorAll('.flower-item');
         const paperZone = document.getElementById('paper-zone');
+        const wrappingText = document.getElementById('wrapping-text');
         const collectedBox = document.getElementById('collected-box');
         const paperLabel = document.getElementById('paper-label');
         const bouquetContainer = document.getElementById('bouquet-container');
@@ -590,10 +613,8 @@
 
         // --- Cấu hình Playlist Nhạc ---
         const playlist = [
-            { src: './audio/nhacThai.mp3', 
-            title: 'ถ้าเธอรักใครคนหนึ่ง (If You Love Someone)' },
-            { src: './audio/mono_2.mp3', 
-            title: 'Sandwich & Story' } // Thêm bài tiếp theo tùy ý
+            { src: './audio/nhacThai.mp3', title: 'Nhạc Thái Ngọt Ngào 🎵' },
+            { src: './audio/bai_hat_2.mp3', title: 'Bản Tình Ca 20/10 ✨' }
         ];
         
         let currentTrackIndex = 0;
@@ -677,7 +698,7 @@
             playTrack(currentTrackIndex);
         });
 
-        // 4. Click vào hoa để đưa vào giấy gói
+        // 4. Click trực tiếp vào cành hoa để đưa vào giấy gói một cách mượt mà
         flowerItems.forEach(item => {
             item.addEventListener('click', () => {
                 if (item.style.display === 'none') return;
@@ -689,14 +710,22 @@
                 }
 
                 collectedCount++;
+                const imgTag = item.querySelector('img');
+                const imgSrc = imgTag ? imgTag.src : '';
+
                 const span = document.createElement('span');
                 span.classList.add('collected-flower');
-                span.textContent = item.dataset.flower;
+                
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                span.appendChild(img);
+                
                 collectedBox.appendChild(span);
 
                 if (collectedCount >= totalFlowers) {
                     setTimeout(() => {
                         paperZone.style.display = 'none';
+                        wrappingText.style.display = 'none';
                         document.querySelector('.table-area').style.display = 'none';
                         document.querySelector('.instruction').style.display = 'none';
                         bouquetContainer.classList.remove('hidden');
@@ -705,7 +734,7 @@
             });
         });
 
-        // --- HÀM CHẠY HIỆU ỨNG ĐÁNH MỸ CHO BỨC THƯ ---
+        // --- HÀM CHẠY HIỆU ỨNG ĐÁNH MÁY CHO BỨC THƯ ---
         const letterContent = `Nhân ngày 20 tháng 10, chúc cậu luôn luôn rạng rỡ, xinh đẹp và ngập tràn hạnh phúc trong cuộc sống.
 
 Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút bất ngờ và có một ngày lễ thật vui vẻ. Chúc mọi dự định sắp tới của cậu đều thành công rực rỡ nhé! 💐✨`;
@@ -714,11 +743,10 @@ Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút b
             const letterBox = document.getElementById('letter-text');
             letterBox.innerHTML = '';
             let i = 0;
-            const speed = 35; // Tốc độ chạy chữ (mili-giây cho mỗi ký tự, số càng nhỏ chạy càng nhanh)
+            const speed = 35;
 
             function typing() {
                 if (i < letterContent.length) {
-                    // Xử lý giữ nguyên xuống dòng trong nội dung văn bản
                     if (letterContent.charAt(i) === '\n') {
                         letterBox.innerHTML += '<br>';
                     } else {
@@ -740,7 +768,7 @@ Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút b
                 sceneLetter.style.opacity = '0';
                 setTimeout(() => {
                     sceneLetter.style.opacity = '1';
-                    typeWriterEffect(); // Gọi hiệu ứng chạy chữ khi hiện thư
+                    typeWriterEffect();
                 }, 50);
             }, 500);
         });

@@ -86,7 +86,7 @@
             border: 2px solid #ff69b4;
             flex-shrink: 0;
             animation: spin 4s linear infinite;
-            animation-play-state: paused; /* Mặc định đứng im khi chưa phát */
+            animation-play-state: paused;
         }
 
         .vinyl-disc::after {
@@ -199,7 +199,7 @@
         .door-hotspot {
             position: absolute;
             bottom: 12%;
-            left: 51%;
+            left: 52%;
             transform: translateX(-50%);
             width: 12%;
             height: 40%;
@@ -398,6 +398,7 @@
             line-height: 1.8;
             color: #554857;
             white-space: pre-line;
+            min-height: 120px; /* Tránh bị giật layout khi chữ đang chạy */
         }
 
         .feedback-box {
@@ -438,7 +439,6 @@
             background: #fff;
         }
 
-        /* Nút Gửi Feedback mềm mại */
         .feedback-box button {
             padding: 12px;
             background: linear-gradient(135deg, #ff9aae, #ff69b4);
@@ -477,17 +477,14 @@
 
     <!-- --- TRÌNH PHÁT NHẠC ĐĨA THAN GÓC TRÊN TRÁI --- -->
     <div class="music-player-box">
-        <!-- Đĩa quay minh họa -->
         <div class="vinyl-disc" id="vinyl-disc"></div>
         <div class="music-info">
-            <div class="song-title" id="song-title">Đang phát: Nhạc Thái 🎵</div>
-            <!-- Thanh thời gian chạy -->
+            <div class="song-title" id="song-title">Nhạc Thái Ngọt Ngào 🎵</div>
             <div class="progress-bar-container" id="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
-            <!-- Các nút bấm mềm mại -->
             <div class="music-controls">
-                <button class="music-btn" id="play-pause-btn">⏸️ Dừng</button>
+                <button class="music-btn" id="play-pause-btn">▶️ Phát</button>
                 <button class="music-btn" id="next-music-btn">⏭️ Next</button>
             </div>
         </div>
@@ -499,7 +496,6 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Thẻ Audio hỗ trợ Playlist nhạc -->
     <audio id="bg-music" preload="auto">
         Trình duyệt của bạn không hỗ trợ thẻ audio.
     </audio>
@@ -557,21 +553,15 @@
                 </div>
                 <div class="letter-text-content">
                     <h3>Gửi Linh, <span style="font-family: 'Gamja Flower', cursive; font-size: 1.1em;">하린</span>,</h3>
-                    <div class="letter-body">
-                        Nhân ngày 20 tháng 10, chúc cậu luôn luôn rạng rỡ, xinh đẹp và ngập tràn hạnh phúc trong cuộc sống.
-
-                        Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút bất ngờ và có một ngày lễ thật vui vẻ. Chúc mọi dự định sắp tới của cậu đều thành công rực rỡ nhé! 💐✨
-                    </div>
+                    <!-- Thêm ID để chạy hiệu ứng đánh máy -->
+                    <div class="letter-body" id="letter-text"></div>
                 </div>
             </div>
 
             <div class="feedback-box">
                 <h3 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #d81b60; margin-bottom: 15px;">Góc Phản Hồi & Tâm Sự 💌</h3>
                 <form id="feedback-form">
-                    <div>
-                        <label for="name">Tên của cậu:</label>
-                        <input type="text" id="name" name="name" required placeholder="Nhập tên của cậu...">
-                    </div>
+                    
                     <div>
                         <label for="message">Cảm nhận hoặc lời nhắn lại:</label>
                         <textarea id="message" name="message" rows="4" required placeholder="Nhập lời nhắn gửi về cho tớ nhé..."></textarea>
@@ -598,7 +588,7 @@
         let totalFlowers = flowerItems.length;
         let collectedCount = 0;
 
-        // --- Cấu hình Playlist Nhạc (Cậu có thể đổi tên bài hát tương ứng ở mảng title bên dưới) ---
+        // --- Cấu hình Playlist Nhạc ---
         const playlist = [
             { src: './audio/nhacThai.mp3', 
             title: 'ถ้าเธอรักใครคนหนึ่ง (If You Love Someone)' },
@@ -615,25 +605,29 @@
         const progressBar = document.getElementById('progress-bar');
         const progressContainer = document.getElementById('progress-container');
 
-        function playTrack(index) {
+        function loadTrack(index) {
             if (index >= playlist.length) {
-                currentTrackIndex = 0; // Vòng lặp lại từ bài đầu tiên khi hết list
+                currentTrackIndex = 0;
             }
             bgMusic.src = playlist[currentTrackIndex].src;
-            songTitle.textContent = `Đang phát: ${playlist[currentTrackIndex].title}`;
-            
+            songTitle.textContent = playlist[currentTrackIndex].title;
+        }
+
+        function playTrack(index) {
+            loadTrack(index);
             bgMusic.play().then(() => {
                 playPauseBtn.textContent = '⏸️ Dừng';
-                vinylDisc.style.animationPlayState = 'running'; // Đĩa quay
-            }).catch(err => console.log("Lỗi phát nhạc:", err));
+                vinylDisc.style.animationPlayState = 'running';
+            }).catch(err => console.log("Trình duyệt chờ tương tác:", err));
         }
+
+        loadTrack(currentTrackIndex);
 
         bgMusic.addEventListener('ended', () => {
             currentTrackIndex++;
             playTrack(currentTrackIndex);
         });
 
-        // Cập nhật thanh thời gian chạy
         bgMusic.addEventListener('timeupdate', () => {
             if (bgMusic.duration) {
                 const progressPercent = (bgMusic.currentTime / bgMusic.duration) * 100;
@@ -641,7 +635,6 @@
             }
         });
 
-        // Tua nhạc khi bấm vào thanh thời gian
         progressContainer.addEventListener('click', (e) => {
             const width = progressContainer.clientWidth;
             const clickX = e.offsetX;
@@ -667,13 +660,10 @@
         // 2. Nút Dừng / Phát nhạc
         playPauseBtn.addEventListener('click', () => {
             if (bgMusic.paused) {
-                if (!bgMusic.src) {
-                    playTrack(currentTrackIndex);
-                } else {
-                    bgMusic.play();
-                }
-                playPauseBtn.textContent = '⏸️ Dừng';
-                vinylDisc.style.animationPlayState = 'running';
+                bgMusic.play().then(() => {
+                    playPauseBtn.textContent = '⏸️ Dừng';
+                    vinylDisc.style.animationPlayState = 'running';
+                }).catch(err => console.log(err));
             } else {
                 bgMusic.pause();
                 playPauseBtn.textContent = '▶️ Phát';
@@ -715,14 +705,43 @@
             });
         });
 
-        // 5. Click vào bó hoa hoàn thành -> Mở bức thư & form feedback
+        // --- HÀM CHẠY HIỆU ỨNG ĐÁNH MỸ CHO BỨC THƯ ---
+        const letterContent = `Nhân ngày 20 tháng 10, chúc cậu luôn luôn rạng rỡ, xinh đẹp và ngập tràn hạnh phúc trong cuộc sống.
+
+Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút bất ngờ và có một ngày lễ thật vui vẻ. Chúc mọi dự định sắp tới của cậu đều thành công rực rỡ nhé! 💐✨`;
+
+        function typeWriterEffect() {
+            const letterBox = document.getElementById('letter-text');
+            letterBox.innerHTML = '';
+            let i = 0;
+            const speed = 35; // Tốc độ chạy chữ (mili-giây cho mỗi ký tự, số càng nhỏ chạy càng nhanh)
+
+            function typing() {
+                if (i < letterContent.length) {
+                    // Xử lý giữ nguyên xuống dòng trong nội dung văn bản
+                    if (letterContent.charAt(i) === '\n') {
+                        letterBox.innerHTML += '<br>';
+                    } else {
+                        letterBox.innerHTML += letterContent.charAt(i);
+                    }
+                    i++;
+                    setTimeout(typing, speed);
+                }
+            }
+            typing();
+        }
+
+        // 5. Click vào bó hoa hoàn thành -> Mở bức thư & kích hoạt hiệu ứng gõ chữ
         bouquetContainer.addEventListener('click', () => {
             sceneWorkshop.style.opacity = '0';
             setTimeout(() => {
                 sceneWorkshop.classList.add('hidden');
                 sceneLetter.classList.remove('hidden');
                 sceneLetter.style.opacity = '0';
-                setTimeout(() => sceneLetter.style.opacity = '1', 50);
+                setTimeout(() => {
+                    sceneLetter.style.opacity = '1';
+                    typeWriterEffect(); // Gọi hiệu ứng chạy chữ khi hiện thư
+                }, 50);
             }, 500);
         });
 

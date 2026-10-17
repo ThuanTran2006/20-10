@@ -608,7 +608,7 @@
     <div class="music-player-box">
         <div class="vinyl-disc" id="vinyl-disc"></div>
         <div class="music-info">
-            <div class="song-title" id="song-title">Nhạc Thái Ngọt Ngào 🎵</div>
+            <div class="song-title" id="song-title">Đang tải nhạc... 🎵</div>
             <div class="progress-bar-container" id="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
@@ -734,16 +734,15 @@
         });
 
         // --- Playlist tự động lấy các file MP3 trong thư mục audio trên GitHub ---
-        // Với GitHub Pages dạng username.github.io/repository/, tự nhận diện owner/repo.
-        // Nếu dùng tên miền riêng hoặc hosting khác, hãy điền GITHUB_OWNER và GITHUB_REPO.
         const pathParts = window.location.pathname.split('/').filter(Boolean);
         const isGithubPages = window.location.hostname.endsWith('.github.io');
+        
         const GITHUB_OWNER = isGithubPages
             ? window.location.hostname.split('.')[0]
-            : 'THAY_TEN_TAI_KHOAN_GITHUB';
+            : 'ThuanTran2006';
         const GITHUB_REPO = isGithubPages
             ? (pathParts.length ? pathParts[0] : `${GITHUB_OWNER}.github.io`)
-            : 'THAY_TEN_REPOSITORY';
+            : '20-10';
 
         const playlist = [];
         const fallbackPlaylist = [
@@ -761,7 +760,6 @@
         const progressContainer = document.getElementById('progress-container');
 
         async function discoverPlaylist() {
-            // GitHub API chỉ đọc được repo riêng tư khi có xác thực; website này nên dùng repo công khai.
             const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/audio`;
             try {
                 if (GITHUB_OWNER.startsWith('THAY_') || GITHUB_REPO.startsWith('THAY_')) {
@@ -778,11 +776,14 @@
                         title: file.name.replace(/\.mp3$/i, '').replace(/[_-]+/g, ' ')
                     }));
 
-                playlist.splice(0, playlist.length, ...tracks);
-                if (playlist.length === 0) throw new Error('Không tìm thấy file MP3 trong thư mục audio.');
+                if (tracks.length > 0) {
+                    playlist.splice(0, playlist.length, ...tracks);
+                    console.log(`Đã tự động tải thành công ${playlist.length} bài hát từ GitHub.`);
+                } else {
+                    throw new Error('Không tìm thấy file MP3 trong thư mục audio.');
+                }
                 currentTrackIndex = 0;
                 loadTrack(currentTrackIndex);
-                console.log(`Đã tự động tải ${playlist.length} bài hát từ GitHub.`);
             } catch (error) {
                 console.warn('Không lấy được playlist tự động, dùng danh sách dự phòng:', error.message);
                 playlist.splice(0, playlist.length, ...fallbackPlaylist);
@@ -937,7 +938,6 @@
             const screenH = window.innerHeight;
 
             // Phun thành nhiều đợt; mỗi bông có quỹ đạo và thời gian rơi riêng.
-            // Các điểm đáp được phân bố theo lưới để tránh lộ những khoảng trống lớn.
             const cols = Math.ceil(screenW / 76);
             const rows = Math.ceil(screenH / 82);
             const targets = [];
@@ -951,7 +951,7 @@
                 }
             }
 
-            // Trộn vị trí đáp để hoa không lấp đầy theo từng hàng cứng nhắc.
+            // Trộn vị trí đáp
             for (let i = targets.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [targets[i], targets[j]] = [targets[j], targets[i]];
@@ -984,16 +984,12 @@
                 flowerImg.style.animationDelay = `${delay}s`;
 
                 overlay.appendChild(flowerImg);
-                // Kích hoạt animation sau khi phần tử đã được gắn vào DOM.
                 requestAnimationFrame(() => flowerImg.classList.add('falling'));
                 maxEndTime = Math.max(maxEndTime, (delay + duration) * 1000);
             });
 
-            // Chuyển cảnh theo mốc thời gian cố định để không bị khựng vì số lượng hoa.
-            // Hoa tiếp tục rơi trong lúc cảnh thư được chuẩn bị phía sau lớp phủ.
             const coverTime = 3100;
             setTimeout(() => {
-                // Đưa thư vào DOM ở trạng thái ẩn, sau đó kích hoạt transition ở frame kế tiếp.
                 sceneLetter.classList.remove('hidden');
                 sceneLetter.classList.remove('letter-scene-enter');
                 sceneLetter.style.opacity = '0';

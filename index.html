@@ -378,6 +378,7 @@
         .bouquet-result img {
             width: 220px;
             height: auto;
+            /* Không dùng multiply cho bó hoa: tránh ảnh PNG bị hiển thị thành mảng đen */
             mix-blend-mode: normal;
             background: transparent;
             filter: drop-shadow(0 10px 20px rgba(216, 27, 96, 0.3));
@@ -456,6 +457,7 @@
             max-width: 800px;
         }
 
+        /* Cảnh bức thư: xuất hiện mềm mại sau lớp hoa */
         #scene-letter {
             opacity: 0;
             transform: translate3d(0, 18px, 0) scale(.985);
@@ -606,7 +608,7 @@
     <div class="music-player-box">
         <div class="vinyl-disc" id="vinyl-disc"></div>
         <div class="music-info">
-            <div class="song-title" id="song-title">Nhạc Trữ Tình 🎵</div>
+            <div class="song-title" id="song-title">Nhạc Thái Ngọt Ngào 🎵</div>
             <div class="progress-bar-container" id="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
@@ -731,12 +733,22 @@
             if (img) flowerImagesSrc.push(img.src);
         });
 
-        // --- DANH SÁCH BÀI HÁT CHUẨN XÁC TRỎ TRỰC TIẾP VÀO THƯ MỤC AUDIO ---
-        // Các đường dẫn đã khớp chính xác với các file MP3 hiện có của bạn trên GitHub.
-        const playlist = [
-            { src: './audio/cau_vinh_tuy.mp3', title: 'Sandwich & Story' },
-            { src: './audio/cau_vinh_tuy.mp3', title: 'Cầu Vĩnh Tuy - Wren Evans' },
-            { src: './audio/nhac_thai.mp3', title: 'ถ้าเธอรักใครคนหนึ่ง (If you love someone)' }
+        // --- Playlist tự động lấy các file MP3 trong thư mục audio trên GitHub ---
+        // Với GitHub Pages dạng username.github.io/repository/, tự nhận diện owner/repo.
+        // Nếu dùng tên miền riêng hoặc hosting khác, hãy điền GITHUB_OWNER và GITHUB_REPO.
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const isGithubPages = window.location.hostname.endsWith('.github.io');
+        const GITHUB_OWNER = isGithubPages
+            ? window.location.hostname.split('.')[0]
+            : 'THAY_TEN_TAI_KHOAN_GITHUB';
+        const GITHUB_REPO = isGithubPages
+            ? (pathParts.length ? pathParts[0] : `${GITHUB_OWNER}.github.io`)
+            : 'THAY_TEN_REPOSITORY';
+
+        const playlist = [];
+        const fallbackPlaylist = [
+            { src: './audio/nhacThai.mp3', title: 'ถ้าเธอรักใครคนหนึ่ง (If you love someone)' },
+            { src: './audio/mono_2.mp3', title: 'Sandwich & Story' }
         ];
 
         let currentTrackIndex = 0;
@@ -748,13 +760,43 @@
         const progressBar = document.getElementById('progress-bar');
         const progressContainer = document.getElementById('progress-container');
 
+        async function discoverPlaylist() {
+            // GitHub API chỉ đọc được repo riêng tư khi có xác thực; website này nên dùng repo công khai.
+            const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/audio`;
+            try {
+                if (GITHUB_OWNER.startsWith('THAY_') || GITHUB_REPO.startsWith('THAY_')) {
+                    throw new Error('Chưa cấu hình repository GitHub cho playlist.');
+                }
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`GitHub API trả về ${response.status}`);
+                const files = await response.json();
+                const tracks = files
+                    .filter(file => file.type === 'file' && /\.mp3$/i.test(file.name))
+                    .sort((a, b) => a.name.localeCompare(b.name, 'vi'))
+                    .map(file => ({
+                        src: file.download_url,
+                        title: file.name.replace(/\.mp3$/i, '').replace(/[_-]+/g, ' ')
+                    }));
+
+                playlist.splice(0, playlist.length, ...tracks);
+                if (playlist.length === 0) throw new Error('Không tìm thấy file MP3 trong thư mục audio.');
+                currentTrackIndex = 0;
+                loadTrack(currentTrackIndex);
+                console.log(`Đã tự động tải ${playlist.length} bài hát từ GitHub.`);
+            } catch (error) {
+                console.warn('Không lấy được playlist tự động, dùng danh sách dự phòng:', error.message);
+                playlist.splice(0, playlist.length, ...fallbackPlaylist);
+                loadTrack(currentTrackIndex);
+            }
+        }
+
         function loadTrack(index) {
             if (!playlist.length) {
                 songTitle.textContent = 'Chưa có bài hát 🎵';
                 return;
             }
             currentTrackIndex = ((index % playlist.length) + playlist.length) % playlist.length;
-            bgMusic.src = encodeURI(playlist[currentTrackIndex].src);
+            bgMusic.src = playlist[currentTrackIndex].src;
             songTitle.textContent = playlist[currentTrackIndex].title;
         }
 
@@ -767,8 +809,8 @@
             }).catch(err => console.log("Trình duyệt chờ tương tác:", err));
         }
 
-        // Khởi tạo bài hát đầu tiên
-        loadTrack(currentTrackIndex);
+        // Tải danh sách nhạc trước; khi mở cửa, trình duyệt sẽ phát bài đầu tiên.
+        discoverPlaylist();
 
         bgMusic.addEventListener('ended', () => {
             currentTrackIndex++;
@@ -802,6 +844,7 @@
             doorBtn.classList.add('door-pressed');
             sceneExterior.classList.add('door-transitioning');
 
+            // Cảnh ngoài tan dần, sau đó cảnh trong tiệm xuất hiện nhẹ nhàng.
             setTimeout(() => {
                 sceneExterior.classList.add('hidden');
                 sceneExterior.classList.remove('door-transitioning');
@@ -893,6 +936,8 @@
             const screenW = window.innerWidth;
             const screenH = window.innerHeight;
 
+            // Phun thành nhiều đợt; mỗi bông có quỹ đạo và thời gian rơi riêng.
+            // Các điểm đáp được phân bố theo lưới để tránh lộ những khoảng trống lớn.
             const cols = Math.ceil(screenW / 76);
             const rows = Math.ceil(screenH / 82);
             const targets = [];
@@ -906,6 +951,7 @@
                 }
             }
 
+            // Trộn vị trí đáp để hoa không lấp đầy theo từng hàng cứng nhắc.
             for (let i = targets.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [targets[i], targets[j]] = [targets[j], targets[i]];
@@ -938,12 +984,16 @@
                 flowerImg.style.animationDelay = `${delay}s`;
 
                 overlay.appendChild(flowerImg);
+                // Kích hoạt animation sau khi phần tử đã được gắn vào DOM.
                 requestAnimationFrame(() => flowerImg.classList.add('falling'));
                 maxEndTime = Math.max(maxEndTime, (delay + duration) * 1000);
             });
 
+            // Chuyển cảnh theo mốc thời gian cố định để không bị khựng vì số lượng hoa.
+            // Hoa tiếp tục rơi trong lúc cảnh thư được chuẩn bị phía sau lớp phủ.
             const coverTime = 3100;
             setTimeout(() => {
+                // Đưa thư vào DOM ở trạng thái ẩn, sau đó kích hoạt transition ở frame kế tiếp.
                 sceneLetter.classList.remove('hidden');
                 sceneLetter.classList.remove('letter-scene-enter');
                 sceneLetter.style.opacity = '0';
@@ -996,6 +1046,7 @@ Món quà nhỏ từ tiệm hoa này hy vọng sẽ làm cậu có một chút b
             typing();
         }
 
+        // 5. Click vào bó hoa hoàn thành -> Kích hoạt hiệu ứng mượt mà
         bouquetContainer.addEventListener('click', (e) => {
             triggerSmoothFallAndPile(e);
         });

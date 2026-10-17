@@ -745,40 +745,11 @@
             ? (pathParts.length ? pathParts[0] : `${GITHUB_OWNER}.github.io`)
             : 'THAY_TEN_REPOSITORY';
 
-        let fallbackPlaylist = [];
-
-async function loadFallbackPlaylist() {
-    const GITHUB_OWNER = 'ThuanTran2006';
-    const GITHUB_REPO = '20-10';
-
-    const apiUrl =
-        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/audio`;
-
-    try {
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-            throw new Error('Không thể đọc thư mục audio');
-        }
-
-        const files = await response.json();
-
-        fallbackPlaylist = files
-            .filter(file =>
-                file.type === 'file' &&
-                file.name.toLowerCase().endsWith('.mp3')
-            )
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map(file => ({
-                src: file.download_url,
-                title: file.name.replace(/\.mp3$/i, '')
-            }));
-
-        console.log('Playlist:', fallbackPlaylist);
-    } catch (error) {
-        console.error('Lỗi tải playlist:', error);
-    }
-}
+        const playlist = [];
+        const fallbackPlaylist = [
+            { src: './audio/nhacThai.mp3', title: 'ถ้าเธอรักใครคนหนึ่ง (If you love someone)' },
+            { src: './audio/mono_2.mp3', title: 'Sandwich & Story' }
+        ];
 
         let currentTrackIndex = 0;
         const bgMusic = document.getElementById('bg-music');

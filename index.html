@@ -897,8 +897,10 @@
 
             // Phun thành nhiều đợt; mỗi bông có quỹ đạo và thời gian rơi riêng.
             // Các điểm đáp được phân bố theo lưới để tránh lộ những khoảng trống lớn.
-            const cols = Math.ceil(screenW / 76);
-            const rows = Math.ceil(screenH / 82);
+            // Kiểm tra nếu là thiết bị di động thì tăng kích thước chia lưới để giảm số lượng hoa vẽ ra
+            const gridDivider = window.innerWidth < 768 ? 120 : 76; 
+            const cols = Math.ceil(screenW / gridDivider);
+            const rows = Math.ceil(screenH / (gridDivider + 10));
             const targets = [];
 
             for (let row = 0; row < rows; row++) {

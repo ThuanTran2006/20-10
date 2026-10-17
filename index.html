@@ -733,24 +733,12 @@
             if (img) flowerImagesSrc.push(img.src);
         });
 
-        // --- Playlist tự động lấy các file MP3 trong thư mục audio trên GitHub ---
-        // Với GitHub Pages dạng username.github.io/repository/, tự nhận diện owner/repo.
-        // Nếu dùng tên miền riêng hoặc hosting khác, hãy điền GITHUB_OWNER và GITHUB_REPO.
-        const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const isGithubPages = window.location.hostname.endsWith('.github.io');
-        const GITHUB_OWNER = isGithubPages
-            ? window.location.hostname.split('.')[0]
-            : 'THAY_TEN_TAI_KHOAN_GITHUB';
-        const GITHUB_REPO = isGithubPages
-            ? (pathParts.length ? pathParts[0] : `${GITHUB_OWNER}.github.io`)
-            : 'THAY_TEN_REPOSITORY';
-
-        const playlist = [];
-        const fallbackPlaylist = [
+        // --- Cấu hình Playlist Nhạc ---
+        const playlist = [
             { src: './audio/nhacThai.mp3', title: 'ถ้าเธอรักใครคนหนึ่ง (If you love someone)' },
             { src: './audio/mono_2.mp3', title: 'Sandwich & Story' }
         ];
-
+        
         let currentTrackIndex = 0;
         const bgMusic = document.getElementById('bg-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
@@ -760,48 +748,15 @@
         const progressBar = document.getElementById('progress-bar');
         const progressContainer = document.getElementById('progress-container');
 
-        async function discoverPlaylist() {
-            // GitHub API chỉ đọc được repo riêng tư khi có xác thực; website này nên dùng repo công khai.
-            const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/audio`;
-            try {
-                if (GITHUB_OWNER.startsWith('THAY_') || GITHUB_REPO.startsWith('THAY_')) {
-                    throw new Error('Chưa cấu hình repository GitHub cho playlist.');
-                }
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`GitHub API trả về ${response.status}`);
-                const files = await response.json();
-                const tracks = files
-                    .filter(file => file.type === 'file' && /\.mp3$/i.test(file.name))
-                    .sort((a, b) => a.name.localeCompare(b.name, 'vi'))
-                    .map(file => ({
-                        src: file.download_url,
-                        title: file.name.replace(/\.mp3$/i, '').replace(/[_-]+/g, ' ')
-                    }));
-
-                playlist.splice(0, playlist.length, ...tracks);
-                if (playlist.length === 0) throw new Error('Không tìm thấy file MP3 trong thư mục audio.');
-                currentTrackIndex = 0;
-                loadTrack(currentTrackIndex);
-                console.log(`Đã tự động tải ${playlist.length} bài hát từ GitHub.`);
-            } catch (error) {
-                console.warn('Không lấy được playlist tự động, dùng danh sách dự phòng:', error.message);
-                playlist.splice(0, playlist.length, ...fallbackPlaylist);
-                loadTrack(currentTrackIndex);
-            }
-        }
-
         function loadTrack(index) {
-            if (!playlist.length) {
-                songTitle.textContent = 'Chưa có bài hát 🎵';
-                return;
+            if (index >= playlist.length) {
+                currentTrackIndex = 0;
             }
-            currentTrackIndex = ((index % playlist.length) + playlist.length) % playlist.length;
             bgMusic.src = playlist[currentTrackIndex].src;
             songTitle.textContent = playlist[currentTrackIndex].title;
         }
 
         function playTrack(index) {
-            if (!playlist.length) return;
             loadTrack(index);
             bgMusic.play().then(() => {
                 playPauseBtn.textContent = '⏸️ Dừng';
@@ -809,8 +764,7 @@
             }).catch(err => console.log("Trình duyệt chờ tương tác:", err));
         }
 
-        // Tải danh sách nhạc trước; khi mở cửa, trình duyệt sẽ phát bài đầu tiên.
-        discoverPlaylist();
+        loadTrack(currentTrackIndex);
 
         bgMusic.addEventListener('ended', () => {
             currentTrackIndex++;
@@ -833,14 +787,19 @@
             }
         });
 
-        // 1. Mở cửa tiệm -> Bật nhạc và chuyển vào trong thật mượt
+        // 1. Mở cửa tiệm -> Chuyển vào trong thật mượt mà mà không làm gián đoạn nhạc
         let doorTransitionRunning = false;
 
         doorBtn.addEventListener('click', () => {
             if (doorTransitionRunning) return;
             doorTransitionRunning = true;
 
-            playTrack(currentTrackIndex);
+            // Kiểm tra: Nếu nhạc đang tạm dừng thì mới kích hoạt phát, 
+            // còn nếu đang phát rồi thì để nguyên tiến trình, không gọi lại playTrack() từ đầu.
+            if (bgMusic.paused) {
+                playTrack(currentTrackIndex);
+            }
+
             doorBtn.classList.add('door-pressed');
             sceneExterior.classList.add('door-transitioning');
 
